@@ -5,6 +5,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: { unoptimized: true },
+  experimental: {
+    serverActions: true, // Enable Server Actions feature flag
+  },
 };
 
 module.exports = nextConfig;

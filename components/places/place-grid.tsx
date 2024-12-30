@@ -2,14 +2,15 @@
 
 import { PlaceCard } from './place-card';
 import { useEffect, useState } from 'react';
-import { getPlaces } from '@/lib/places';
+import { getPlaces } from '@/actions/place';
+import { Place } from '@prisma/client';
 
 interface PlaceGridProps {
   state: string;
 }
 
 export function PlaceGrid({ state }: PlaceGridProps) {
-  const [places, setPlaces] = useState([]);
+  const [places, setPlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +35,16 @@ export function PlaceGrid({ state }: PlaceGridProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
       {places.map((place) => (
-        <PlaceCard key={place.id} place={place} />
+        <PlaceCard key={place.id} place={{
+          id: place.id,
+          name: place.name,
+          description: place.description || '',
+          imageUrl: place.imageUrl || '',
+          _count: {
+            votes: 0 // Default value since it's missing from Place type
+          },
+          city: place.city
+        }} />
       ))}
     </div>
   );

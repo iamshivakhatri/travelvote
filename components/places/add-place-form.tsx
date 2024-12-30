@@ -1,20 +1,23 @@
-'use client';
+// AddPlaceForm.tsx (Client-Side)
+"use client"
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Upload } from 'lucide-react';
-import { addPlace } from '@/lib/places';
+import { addPlace } from '@/actions/place';
 import { useRouter } from 'next/navigation';
 import { US_STATES } from '@/lib/states';
-import { useAuth } from '@/lib/auth';
 import { toast } from '@/hooks/use-toast';
 
 export function AddPlaceForm() {
   const router = useRouter();
-  const { user } = useAuth();
+  // const { user } = useAuth(); // Commented out for now, you will replace it with Clerk later.
+  
+  // For now, using a hardcoded user ID (replace it with Clerk later)
+  const user = { id: 'cm5arfdhb0000rpvgmzygckb2' };
+
   const [formData, setFormData] = useState({
     name: '',
     state: '',
@@ -27,6 +30,8 @@ export function AddPlaceForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check if user is authenticated (this will be replaced by Clerk later)
     if (!user) {
       toast({ title: "Please sign in to add a place", variant: "destructive" });
       return;
@@ -34,6 +39,7 @@ export function AddPlaceForm() {
 
     setIsSubmitting(true);
     try {
+      // Call the addPlace action with the userId
       await addPlace({ ...formData, userId: user.id });
       toast({ title: "Place added successfully!" });
       router.push(`/states/${formData.state.toLowerCase().replace(/\s+/g, '-')}`);
